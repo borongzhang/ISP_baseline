@@ -145,6 +145,3 @@ class SwitchNet(nn.Module):
 
         return y
 
-
-# Backward-compatible alias.
-switchnet = SwitchNetBlock
