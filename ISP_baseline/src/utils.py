@@ -12,14 +12,17 @@ def rotationindex(n):
     )
 
 
-def SparsePolarToCartesian(neta, nx):
-    def CartesianToPolar(coords):
+def sparse_polar_to_cartesian(neta, nx):
+    def cartesian_to_polar(coords):
         """Transforms Cartesian to polar coordinates with custom scaling."""
         i, j = coords[0], coords[1]
         rho = 2 * np.sqrt((i - neta / 2) ** 2 + (j - neta / 2) ** 2) * nx / neta
         theta = (
-            (np.arctan2((neta / 2 - j), (i - neta / 2))) % (2 * np.pi)
-        ) * nx / np.pi / 2
+            ((np.arctan2((neta / 2 - j), (i - neta / 2))) % (2 * np.pi))
+            * nx
+            / np.pi
+            / 2
+        )
         return theta, rho + neta // 2
 
     cart_mat = np.zeros((neta**2, nx, nx))
@@ -31,7 +34,7 @@ def SparsePolarToCartesian(neta, nx):
             pad_dummy = np.pad(mat_dummy, ((0, 0), (neta // 2, neta // 2)), "edge")
             cart_mat[:, i, j] = geometric_transform(
                 pad_dummy,
-                CartesianToPolar,
+                cartesian_to_polar,
                 output_shape=[neta, neta],
                 mode="grid-wrap",
             ).flatten()
@@ -108,3 +111,7 @@ def morton_reshape(x, L, s):
     )
 
     return np.vstack((tmp1, tmp2))
+
+
+# Backward-compatible alias.
+SparsePolarToCartesian = sparse_polar_to_cartesian

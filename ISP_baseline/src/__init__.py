@@ -18,6 +18,7 @@ from ISP_baseline.src.trainers import DeterministicTrainer
 
 from ISP_baseline.src.utils import (
     rotationindex,
+    sparse_polar_to_cartesian,
     SparsePolarToCartesian,
     morton_to_flatten_indices,
     flatten_to_morton_indices,

@@ -1,4 +1,3 @@
-
 from collections.abc import Callable, Mapping
 import dataclasses
 import functools
@@ -21,60 +20,55 @@ ShapeDict = Mapping[str, Any]  # may be nested
 PyTree = Any
 VariableDict = trainers.VariableDict
 
+
 @dataclasses.dataclass(frozen=True, kw_only=True)
 class DeterministicModel(models.BaseModel):
 
-  input_shape: tuple[int, ...]
-  core_module: nn.Module
-  
-  def initialize(self, rng: Array):
-    # TODO: Add a dtype object to ensure consistency of types.
-    x = jnp.ones((1,) + self.input_shape)
-    return self.core_module.init(rng, x)
+    input_shape: tuple[int, ...]
+    core_module: nn.Module
 
-  def loss_fn(
-      self,
-      params: models.PyTree,
-      batch: models.BatchType,
-      rng: Array,
-      mutables: models.PyTree,
-  ) -> models.LossAndAux:
-    
-    y = self.core_module.apply({'params': params}, batch["scatter"])
-    
-    loss = jnp.mean(jnp.square(y - batch["eta"]))
-    metric = dict(loss=loss)
-    return loss, (metric, mutables)
+    def initialize(self, rng: Array):
+        # TODO: Add a dtype object to ensure consistency of types.
+        x = jnp.ones((1,) + self.input_shape)
+        return self.core_module.init(rng, x)
 
-  def eval_fn(
-      self,
-      variables: models.PyTree,
-      batch: models.BatchType,
-      rng: Array,
-  ) -> models.ArrayDict:
-    
-    x = batch['scatter']
-    core = self.inference_fn(variables, self.core_module)
-    y = core(x)
-    rrmse = functools.partial(
-        metrics.mean_squared_error,
-        sum_axes=(-1, -2),
-        relative=True,
-        squared=False,
-    )
+    def loss_fn(
+        self,
+        params: models.PyTree,
+        batch: models.BatchType,
+        rng: Array,
+        mutables: models.PyTree,
+    ) -> models.LossAndAux:
 
-    return dict(rrmse=rrmse(pred=y, true=batch['eta']))
+        y = self.core_module.apply({"params": params}, batch["scatter"])
 
-  @staticmethod
-  def inference_fn(variables: models.PyTree, core_module: nn.Module):
+        loss = jnp.mean(jnp.square(y - batch["eta"]))
+        metric = dict(loss=loss)
+        return loss, (metric, mutables)
 
-    def _core(
-        x: Array 
-    ) -> Array:
-      return core_module.apply(
-          variables, x
-      )
+    def eval_fn(
+        self,
+        variables: models.PyTree,
+        batch: models.BatchType,
+        rng: Array,
+    ) -> models.ArrayDict:
 
-    return _core
+        x = batch["scatter"]
+        core = self.inference_fn(variables, self.core_module)
+        y = core(x)
+        rrmse = functools.partial(
+            metrics.mean_squared_error,
+            sum_axes=(-1, -2),
+            relative=True,
+            squared=False,
+        )
 
+        return dict(rrmse=rrmse(pred=y, true=batch["eta"]))
 
+    @staticmethod
+    def inference_fn(variables: models.PyTree, core_module: nn.Module):
+
+        def _core(x: Array) -> Array:
+            return core_module.apply(variables, x)
+
+        return _core
