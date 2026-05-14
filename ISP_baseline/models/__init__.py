@@ -26,7 +26,12 @@ from ISP_baseline.models.Compressed import (
 
 from ISP_baseline.models.Uncompressed import Fstar, UncompressedModel
 
-from ISP_baseline.models.SwitchNetModel import DMLayer, switchnet, SwitchNet
+from ISP_baseline.models.SwitchNetModel import (
+    DMLayer,
+    SwitchNetBlock,
+    switchnet,
+    SwitchNet,
+)
 
 from ISP_baseline.models.WideBNet import (
     build_permutation_indices,
