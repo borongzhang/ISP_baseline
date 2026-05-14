@@ -18,7 +18,6 @@ from ISP_baseline.src.model.uncompressed import Fstar, UncompressedModel
 from ISP_baseline.src.model.switch_net_model import (
     DMLayer,
     SwitchNetBlock,
-    switchnet,
     SwitchNet,
 )
 from ISP_baseline.src.model.wide_bnet import (

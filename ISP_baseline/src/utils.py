@@ -112,6 +112,3 @@ def morton_reshape(x, L, s):
 
     return np.vstack((tmp1, tmp2))
 
-
-# Backward-compatible alias.
-SparsePolarToCartesian = sparse_polar_to_cartesian
