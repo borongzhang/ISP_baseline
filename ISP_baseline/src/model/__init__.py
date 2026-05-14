@@ -1,8 +1,6 @@
 """Model implementations for ISP_baseline.
 
-This is the canonical location for model code. The legacy
-`ISP_baseline.models` package re-exports these symbols for backward
-compatibility.
+This is the canonical location for model code.
 """
 
 from ISP_baseline.src.model.compressed import (
@@ -33,3 +31,4 @@ from ISP_baseline.src.model.wide_bnet import (
     U,
     WideBNetModel,
 )
+
