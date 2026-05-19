@@ -15,12 +15,12 @@ from ISP_baseline.src.model.compressed import (
     CompressedModel,
 )
 from ISP_baseline.src.model.uncompressed import Fstar, UncompressedModel
-from ISP_baseline.src.model.switch_net_model import (
+from ISP_baseline.src.model.switchnet import (
     DMLayer,
     SwitchNetBlock,
     SwitchNet,
 )
-from ISP_baseline.src.model.wide_bnet import (
+from ISP_baseline.src.model.widebnet import (
     build_permutation_indices,
     build_switch_indices,
     V,

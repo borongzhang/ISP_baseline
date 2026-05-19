@@ -109,6 +109,7 @@ class Fstar(nn.Module):
 class UncompressedModel(nn.Module):
     nx: int
     neta: int
+    NUM_CONV: int
     cart_mat: jnp.ndarray
     r_index: np.ndarray
 
@@ -123,7 +124,7 @@ class UncompressedModel(nn.Module):
             nx=self.nx, neta=self.neta, cart_mat=self.cart_mat, r_index=self.r_index
         )
         self.convs = [
-            nn.Conv(features=6, kernel_size=(3, 3), padding="SAME") for _ in range(9)
+            nn.Conv(features=6, kernel_size=(3, 3), padding="SAME") for _ in range(self.NUM_CONV)
         ]
         self.final_conv = nn.Conv(features=1, kernel_size=(3, 3), padding="SAME")
 
